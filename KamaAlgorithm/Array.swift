@@ -120,3 +120,27 @@ func lc34_在排序数组中查找元素的第一个和最后一个位置(nums: 
     
     return [leftBorder + 1, rightBorder - 1]
 }
+
+/**
+ 69. x 的平方根
+ 给你一个非负整数 x ，计算并返回 x 的 算术平方根 。
+ 由于返回类型是整数，结果只保留 整数部分 ，小数部分将被 舍去 。
+ 注意：不允许使用任何内置指数函数和算符，例如 pow(x, 0.5) 或者 x ** 0.5 。
+ */
+func lc69_x的平方根(x: Int) -> Int {
+    var left = 0
+    var right = x
+    while left <= right {
+        var middle = left + (right - left) / 2
+        let temp = middle * middle
+        if x < temp {
+            right = middle - 1
+        } else if x > temp {
+            left = middle + 1
+        } else {
+            return middle
+        }
+    }
+    // 如果找不到整数结果，最后会执行left=middle+1，而right不变，right就是向下取整的结果
+    return right
+}

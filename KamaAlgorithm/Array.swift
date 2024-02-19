@@ -128,6 +128,7 @@ func lc34_在排序数组中查找元素的第一个和最后一个位置(nums: 
  注意：不允许使用任何内置指数函数和算符，例如 pow(x, 0.5) 或者 x ** 0.5 。
  */
 func lc69_x的平方根(x: Int) -> Int {
+    // 二分查找
     var left = 0
     var right = x
     while left <= right {
@@ -143,4 +144,28 @@ func lc69_x的平方根(x: Int) -> Int {
     }
     // 如果找不到整数结果，最后会执行left=middle+1，而right不变，right就是向下取整的结果
     return right
+}
+
+/**
+ 367. 有效的完全平方数
+ 给你一个正整数 num 。如果 num 是一个完全平方数，则返回 true ，否则返回 false 。
+ 完全平方数 是一个可以写成某个整数的平方的整数。换句话说，它可以写成某个整数和自身的乘积。
+ 不能使用任何内置的库函数，如  sqrt
+ */
+func lc367_有效的完全平方数(num: Int) -> Bool {
+    // 二分查找
+    var left = 0
+    var right = num
+    while left <= right {
+        var middle = left + (right - left) / 2
+        let temp = middle * middle
+        if num < temp {
+            right = middle - 1
+        } else if num > temp {
+            left = middle + 1
+        } else {
+            return true
+        }
+    }
+    return false
 }

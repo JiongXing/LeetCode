@@ -169,3 +169,146 @@ func lc367_有效的完全平方数(num: Int) -> Bool {
     }
     return false
 }
+
+/**
+ 27. 移除元素
+ 给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度。
+ 不要使用额外的数组空间，你必须仅使用 O(1) 额外空间并原地修改输入数组。
+ 元素的顺序可以改变。你不需要考虑数组中超出新长度后面的元素。
+ */
+func lc27_移除元素(nums: inout [Int], val: Int) -> Int {
+    // 原地删除，用快慢指针。慢指针指向要更新值的位置，快指针寻找新值
+    guard nums.count > 0 else {
+        return 0
+    }
+    var slow = 0
+    var fast = 0
+    while fast < nums.count {
+        if nums[fast] != val {
+            nums[slow] = nums[fast]
+            slow += 1
+        }
+        fast += 1
+    }
+    return slow
+}
+
+
+/**
+ 26. 删除有序数组中的重复项
+ 给你一个 非严格递增排列 的数组 nums ，请你 原地 删除重复出现的元素，使每个元素 只出现一次 ，返回删除后数组的新长度。元素的 相对顺序 应该保持 一致 。然后返回 nums 中唯一元素的个数。
+ */
+func lc26_删除有序数组中的重复项(nums: inout [Int]) -> Int {
+    // 因为有序，重复项都挨在一起
+    // 慢指针指向每个数字第一次出现的位置，fast指针寻找下个数字的位置
+    // 找到新数时，把fast指向值赋值给slow+1位置
+    guard nums.count > 0 else {
+        return 0
+    }
+    var slow = 0
+    var fast = 0
+    while fast < nums.count {
+        if nums[fast] != nums[slow] {
+            nums[slow + 1] = nums[fast]
+            slow += 1
+        }
+        fast += 1
+    }
+    return slow + 1
+}
+
+/**
+ 283. 移动零
+ 给定一个数组 nums，编写一个函数将所有 0 移动到数组的末尾，同时保持非零元素的相对顺序。
+ 请注意 ，必须在不复制数组的情况下原地对数组进行操作。
+ https://leetcode.cn/problems/move-zeroes/description/
+ */
+func lc283_移动零(nums: inout [Int]) {
+    // 快慢指针，slow指向要更新的位置，fast寻找非0数据，交互
+    guard nums.count > 0 else {
+        return
+    }
+    var slow = 0
+    var fast = 0
+    while fast < nums.count {
+        // 非0就赋值
+        if nums[fast] != 0 {
+            // 把0交互到后面去
+            (nums[slow], nums[fast]) = (nums[fast], nums[slow])
+            slow += 1
+        }
+        fast += 1
+    }
+}
+
+/**
+ 844. 比较含退格的字符串
+ 给定 s 和 t 两个字符串，当它们分别被输入到空白的文本编辑器后，如果两者相等，返回 true 。# 代表退格字符。
+ 注意：如果对空文本输入退格字符，文本继续为空。
+ https://leetcode.cn/problems/backspace-string-compare/description/
+ */
+func lc844_比较含退格的字符串(s: String, t: String) -> Bool {
+    // 求出退格后字符串
+    func getBackspaceString(s: String) -> [Character] {
+        var sChars: [Character] = []
+        for ch in s {
+            if ch != "#" {
+                sChars.append(ch)
+            } else {
+                if sChars.count > 0 {
+                    sChars.removeLast()
+                }
+            }
+        }
+        return sChars
+    }
+    
+    let sChars = getBackspaceString(s: s)
+    let tChars = getBackspaceString(s: t)
+    var sIndex = sChars.count - 1
+    var tIndex = tChars.count - 1
+    while sIndex >= 0 && tIndex >= 0 {
+        if sChars[sIndex] == tChars[tIndex] {
+            sIndex -= 1
+            tIndex -= 1
+            continue
+        }
+        return false
+    }
+    // 任意一个遍历完
+    return (sIndex == tIndex)
+}
+
+/**
+ 977. 有序数组的平方
+ 给你一个按 非递减顺序 排序的整数数组 nums，返回 每个数字的平方 组成的新数组，要求也按 非递减顺序 排序。
+ */
+func lc977_有序数组的平方(nums: [Int]) -> [Int] {
+    // 从后往前填数，平方后最大值一定在nums的两端
+    guard nums.count > 0 else {
+        return []
+    }
+    var left = 0
+    var right = nums.count - 1
+    var ans = [Int](repeating: 0, count: nums.count)
+    var insertIndex = ans.count - 1
+    while left <= right {
+        let leftValue = nums[left] * nums[left]
+        let rightValue = nums[right] * nums[right]
+        if leftValue > rightValue {
+            ans[insertIndex] = leftValue
+            left += 1
+        } else {
+            ans[insertIndex] = rightValue
+            right -= 1
+        }
+        insertIndex -= 1
+    }
+    return ans
+}
+
+func testArray() {
+    var arr = [0,1,0,3,12]
+    lc283_移动零(nums: &arr)
+    print(arr)
+}

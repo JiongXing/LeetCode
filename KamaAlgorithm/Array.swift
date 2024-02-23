@@ -377,6 +377,65 @@ func lc904_水果成篮(fruits: [Int]) -> Int {
     return maxLength
 }
 
+/**
+ 59.螺旋矩阵II
+ 给定一个正整数 n，生成一个包含 1 到 n^2 所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵。
+ 示例:
+ 输入: 3 输出: [ [ 1, 2, 3 ], [ 8, 9, 4 ], [ 7, 6, 5 ] ]
+ https://leetcode.cn/problems/spiral-matrix-ii/description/
+ */
+func lc59_螺旋矩阵II(n: Int) -> [[Int]] {
+    // 模拟法
+    var topBorder = 0
+    var rightBorder = n - 1
+    var bottomBorder = n - 1
+    var leftBorder = 0
+    var matrix = [[Int]](repeating: [Int](repeating: 0, count: n), count: n)
+    var value = 1
+    while true {
+        // 上
+        for col in leftBorder...rightBorder {
+            matrix[topBorder][col] = value
+            value += 1
+        }
+        topBorder += 1
+        if topBorder > bottomBorder {
+            break
+        }
+        
+        // 右
+        for row in topBorder...bottomBorder {
+            matrix[row][rightBorder] = value
+            value += 1
+        }
+        rightBorder -= 1
+        if rightBorder < leftBorder {
+            break
+        }
+        
+        // 下
+        for col in stride(from: rightBorder, to: leftBorder - 1, by: -1) {
+            matrix[bottomBorder][col] = value
+            value += 1
+        }
+        bottomBorder -= 1
+        if bottomBorder < topBorder {
+            break
+        }
+        
+        // 左
+        for row in stride(from: bottomBorder, to: topBorder - 1, by: -1) {
+            matrix[row][leftBorder] = value
+            value += 1
+        }
+        leftBorder += 1
+        if leftBorder > rightBorder {
+            break
+        }
+    }
+    return matrix
+}
+
 func testArray() {
     let arr = [3,3,3,1,2,1,1,2,3,3,4]
     print("输入：\(arr)")

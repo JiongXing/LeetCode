@@ -21,7 +21,7 @@ func lc704_二分查找(nums: [Int], target: Int) -> Int {
     
     // 处理边界问题，rightIndex可被搜索，是闭区间
     while leftIndex <= rightIndex {
-        var middleIndex = leftIndex + (rightIndex - leftIndex) / 2
+        let middleIndex = leftIndex + (rightIndex - leftIndex) / 2
         if target == nums[middleIndex] {
             return middleIndex
         }
@@ -50,7 +50,7 @@ func lc35_搜索插入位置(nums: [Int], target: Int) -> Int {
     
     // 处理边界问题，rightIndex可被搜索，是闭区间
     while leftIndex <= rightIndex {
-        var middleIndex = leftIndex + (rightIndex - leftIndex) / 2
+        let middleIndex = leftIndex + (rightIndex - leftIndex) / 2
         if target == nums[middleIndex] {
             return middleIndex
         }
@@ -84,7 +84,7 @@ func lc34_在排序数组中查找元素的第一个和最后一个位置(nums: 
     var rightIndex = nums.count - 1
     var targetIndex = -1
     while leftIndex <= rightIndex {
-        var middleIndex = leftIndex + (rightIndex - leftIndex) / 2
+        let middleIndex = leftIndex + (rightIndex - leftIndex) / 2
         if target < nums[middleIndex] {
             rightIndex = middleIndex - 1
         } else if target > nums[middleIndex] {
@@ -132,7 +132,7 @@ func lc69_x的平方根(x: Int) -> Int {
     var left = 0
     var right = x
     while left <= right {
-        var middle = left + (right - left) / 2
+        let middle = left + (right - left) / 2
         let temp = middle * middle
         if x < temp {
             right = middle - 1
@@ -157,7 +157,7 @@ func lc367_有效的完全平方数(num: Int) -> Bool {
     var left = 0
     var right = num
     while left <= right {
-        var middle = left + (right - left) / 2
+        let middle = left + (right - left) / 2
         let temp = middle * middle
         if num < temp {
             right = middle - 1
@@ -307,8 +307,81 @@ func lc977_有序数组的平方(nums: [Int]) -> [Int] {
     return ans
 }
 
+/**
+ 209.长度最小的子数组
+ 给定一个含有 n 个正整数的数组和一个正整数 s ，找出该数组中满足其和 ≥ s 的长度最小的 连续 子数组，并返回其长度。如果不存在符合条件的子数组，返回 0。
+ https://leetcode.cn/problems/minimum-size-subarray-sum/description/
+ */
+func lc209_长度最小的子数组(target: Int, nums: [Int]) -> Int {
+    guard nums.count > 0 else {
+        return 0
+    }
+    // 滑动窗口
+    var left = 0
+    var right = 0
+    // 窗口的值
+    var sum = 0
+    var minLength = Int.max
+    // 扩大窗口
+    while right < nums.count {
+        sum += nums[right]
+        while sum >= target {
+            // 窗口符合条件
+            if right - left + 1 < minLength {
+                minLength = right - left + 1
+            }
+            // 缩小左边界，收紧窗口
+            sum -= nums[left]
+            left += 1
+        }
+        right += 1
+    }
+    return minLength != Int.max ? minLength : 0
+}
+
+/**
+ 904. 水果成篮
+ 你正在探访一家农场，农场从左到右种植了一排果树。这些树用一个整数数组 fruits 表示，其中 fruits[i] 是第 i 棵树上的水果 种类 。
+ 你想要尽可能多地收集水果。然而，农场的主人设定了一些严格的规矩，你必须按照要求采摘水果：
+ 你只有 两个 篮子，并且每个篮子只能装 单一类型 的水果。每个篮子能够装的水果总量没有限制。
+ 你可以选择任意一棵树开始采摘，你必须从 每棵 树（包括开始采摘的树）上 恰好摘一个水果 。采摘的水果应当符合篮子中的水果类型。每采摘一次，你将会向右移动到下一棵树，并继续采摘。
+ 一旦你走到某棵树前，但水果不符合篮子的水果类型，那么就必须停止采摘。
+ 给你一个整数数组 fruits ，返回你可以收集的水果的 最大 数目。
+ https://leetcode.cn/problems/fruit-into-baskets/description/
+ */
+func lc904_水果成篮(fruits: [Int]) -> Int {
+    // 题目翻译：找出至多包含2种元素的最长子串，返回子串长度
+    // 滑动窗口
+    var left = 0
+    var right = 0
+    // 哈希表记录水果种类和个数
+    var buket = [Int: Int]()
+    var maxLength = 0
+    while right < fruits.count {
+        let current = fruits[right]
+        buket[current] = (buket[current] ?? 0) + 1
+        // 缩小窗口，直到只包含2种水果
+        while buket.count > 2 {
+            let leftKey = fruits[left]
+            if let leftNum = buket[leftKey] {
+                buket[leftKey] = leftNum - 1
+                if buket[leftKey] == 0 {
+                    buket.removeValue(forKey: leftKey)
+                }
+            }
+            left += 1
+        }
+        maxLength = max(maxLength, right - left + 1)
+        right += 1
+    }
+    return maxLength
+}
+
 func testArray() {
-    var arr = [0,1,0,3,12]
-    lc283_移动零(nums: &arr)
-    print(arr)
+    let arr = [3,3,3,1,2,1,1,2,3,3,4]
+    print("输入：\(arr)")
+    let ans = lc904_水果成篮(fruits: arr)
+    print("输出：\(ans)")
+    
+    print("3749.31 / 8314.02 = \(3749.31 / 8314.02)")
 }

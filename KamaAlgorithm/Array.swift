@@ -436,6 +436,64 @@ func lc59_螺旋矩阵II(n: Int) -> [[Int]] {
     return matrix
 }
 
+/**
+ 54. 螺旋矩阵
+ 给你一个 m 行 n 列的矩阵 matrix ，请按照 顺时针螺旋顺序 ，返回矩阵中的所有元素。
+ */
+func lc54_螺旋矩阵(matrix: [[Int]]) -> [Int] {
+    let m = matrix.count
+    guard m > 0 else {
+        return []
+    }
+    let n = matrix[0].count
+    guard n > 0 else {
+        return [n]
+    }
+    var topBorder = 0
+    var bottomBorder = m - 1
+    var leftBorder = 0
+    var rightBorder = n - 1
+    var ans = [Int]()
+    while true {
+        // top
+        for col in leftBorder...rightBorder {
+            ans.append(matrix[topBorder][col])
+        }
+        topBorder += 1
+        if topBorder > bottomBorder {
+            break
+        }
+        
+        // right
+        for row in topBorder...bottomBorder {
+            ans.append(matrix[row][rightBorder])
+        }
+        rightBorder -= 1
+        if rightBorder < leftBorder {
+            break
+        }
+        
+        // bottom
+        for col in stride(from: rightBorder, to: leftBorder - 1, by: -1) {
+            ans.append(matrix[bottomBorder][col])
+        }
+        bottomBorder -= 1
+        if bottomBorder < topBorder {
+            break
+        }
+        
+        // left
+        for row in stride(from: bottomBorder, to: topBorder - 1, by: -1) {
+            ans.append(matrix[row][leftBorder])
+        }
+        leftBorder += 1
+        if leftBorder > rightBorder {
+            break
+        }
+    }
+    return ans
+}
+
 func testArray() {
     let arr = [3,3,3,1,2,1,1,2,3,3,4]
     print("输入：\(arr)")

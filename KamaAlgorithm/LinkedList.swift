@@ -157,6 +157,52 @@ class MyLinkedList {
     }
 }
 
+/**
+ 206.反转链表
+ 给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。
+ 示例: 输入: 1->2->3->4->5->NULL 输出: 5->4->3->2->1->NULL
+ https://leetcode.cn/problems/reverse-linked-list/description/
+ */
+func lc206_反转链表(head: ListNode?) -> ListNode? {
+    // 原地改变next指向
+    // 双指针，cur.next 指向 pre，同时移动两指针
+    var pre: ListNode? = nil
+    var cur = head
+    while cur != nil {
+        var next = cur?.next
+        cur?.next = pre
+        pre = cur
+        cur = next
+    }
+    return pre
+}
+
+/**
+ 24. 两两交换链表中的节点
+ 给你一个链表，两两交换其中相邻的节点，并返回交换后链表的头节点。你必须在不修改节点内部的值的情况下完成本题（即，只能进行节点交换）。
+ 输入：head = [1,2,3,4]
+ 输出：[2,1,4,3]
+ */
+func lc24_两两交换链表中的节点(head: ListNode?) -> ListNode? {
+    // 要画图理解
+    let dummyHead = ListNode()
+    dummyHead.next = head
+    var prev: ListNode? = dummyHead
+    var cur1 = head
+    var cur2 = head?.next
+    while cur1 != nil && cur2 != nil {
+        let next = cur2?.next
+        cur2?.next = cur1
+        cur1?.next = next
+        prev?.next = cur2
+        
+        prev = cur1
+        cur1 = next
+        cur2 = next?.next
+    }
+    return dummyHead.next
+}
+
 func testLinkedList() {
     let obj = MyLinkedList()
     /*

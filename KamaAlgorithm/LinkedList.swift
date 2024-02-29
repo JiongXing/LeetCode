@@ -203,6 +203,38 @@ func lc24_两两交换链表中的节点(head: ListNode?) -> ListNode? {
     return dummyHead.next
 }
 
+/**
+ 19. 删除链表的倒数第 N 个结点
+ 给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。
+ 输入：head = [1,2,3,4,5], n = 2
+ 输出：[1,2,3,5]
+ */
+func lc19_删除链表的倒数第N个结点(head: ListNode?, n: Int) -> ListNode? {
+    guard n > 0 else {
+        return head
+    }
+    let dummyHead = ListNode()
+    dummyHead.next = head
+    // 快慢指针，fast先slow遍历n步
+    // fast遍历到末尾节点时，slow指向倒数第N个节点的前一个节点
+    var fast: ListNode? = dummyHead
+    var slow: ListNode? = dummyHead
+    var count = n
+    while count > 0 {
+        fast = fast?.next
+        count -= 1
+    }
+    if fast == nil {
+        return head
+    }
+    while fast?.next != nil {
+        fast = fast?.next
+        slow = slow?.next
+    }
+    slow?.next = slow?.next?.next
+    return dummyHead.next
+}
+
 func testLinkedList() {
     let obj = MyLinkedList()
     /*

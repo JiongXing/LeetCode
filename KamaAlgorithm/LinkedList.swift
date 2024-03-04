@@ -235,42 +235,68 @@ func lc19_删除链表的倒数第N个结点(head: ListNode?, n: Int) -> ListNod
     return dummyHead.next
 }
 
+/**
+ 160. 相交链表
+ 给你两个单链表的头节点 headA 和 headB ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 null 。
+ https://leetcode.cn/problems/intersection-of-two-linked-lists/description/
+ */
+func lc160_相交链表(headA: ListNode?, headB: ListNode?) -> ListNode? {
+    // 末尾对齐两个链表，让两指针指向较短链表表头相对位置，同步遍历
+    // 求链表长度差，然后确认长链表先移动的步数
+    func length(of list: ListNode?) -> Int {
+        var length = 0
+        var cur = list
+        while cur != nil {
+            cur = cur?.next
+            length += 1
+        }
+        return length
+    }
+    let lenA = length(of: headA)
+    let lenB = length(of: headB)
+    var longList = headA
+    var shortList = headB
+    if lenA < lenB {
+        longList = headB
+        shortList = headA
+    }
+
+    var longCur = longList
+    var shortCur = shortList
+    for _ in 0..<(abs(lenA - lenB)) {
+        longCur = longCur?.next
+    }
+
+    // 同步移动
+    while longCur != nil && shortCur != nil {
+        // leetcode判题要求地址相等
+        if longCur! === shortCur! {
+            return longCur
+        }
+        longCur = longCur?.next
+        shortCur = shortCur?.next
+    }
+    return nil
+}
+
 func testLinkedList() {
-    let obj = MyLinkedList()
-    /*
-    // ["MyLinkedList","addAtHead","addAtTail","addAtIndex","get","deleteAtIndex","get"]
-    // [[],[1],[3],[1,2],[1],[1],[1]]
-    obj.addAtHead(1)
-    obj.printList()
-    
-    obj.addAtTail(3)
-    obj.printList()
-    
-    obj.addAtIndex(1, 2)
-    obj.printList()
-    
-    print(obj.get(1))
-    
-    obj.deleteAtIndex(1)
-    obj.printList()
-    
-    print(obj.get(1))
-    */
-    
-    /*
-    // ["MyLinkedList","addAtHead","deleteAtIndex"]
-    // [[],[1],[0]]
-    obj.addAtHead(1)
-    obj.printList()
-    
-    obj.deleteAtIndex(0)
-    obj.printList()
-     */
-    
-    // ["MyLinkedList","addAtTail","get"]
-    // [[],[1],[0]]
-    obj.addAtTail(1)
-    obj.printList()
-    
-    print(obj.get(0))
+    let list1 = createList(array: [4,1,8,4,5])
+    let list2 = createList(array: [5,0,1,8,4,5])
+    let result = lc160_相交链表(headA: list1, headB: list2)
+    print("val: \(result?.val ?? 0)")
+}
+
+func createList(array: [Int]) -> ListNode? {
+    var head: ListNode?
+    var pre: ListNode?
+    array.forEach { val in
+        let node = ListNode()
+        node.val = val
+        pre?.next = node
+        pre = node
+        if head == nil {
+            head = node
+        }
+    }
+    return head
 }

@@ -279,6 +279,63 @@ func lc160_相交链表(headA: ListNode?, headB: ListNode?) -> ListNode? {
     return nil
 }
 
+/*
+ 141. 环形链表
+ 给你一个链表的头节点 head ，判断链表中是否有环。
+ https://leetcode.cn/problems/linked-list-cycle/description/
+ */
+func lc141_环形链表(head: ListNode?) -> Bool {
+    // 快慢指针，指针相遇表示有环，指针走到nil表示没环
+    // 快指针每次2步
+    var fast = head
+    var slow = head
+    while fast != nil && slow != nil {
+        fast = fast?.next?.next
+        slow = slow?.next
+        if fast === slow && fast != nil {
+            return true
+        }
+    }
+    return false
+}
+
+/*
+ 142. 环形链表 II
+ 给定一个链表的头节点  head ，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+ https://leetcode.cn/problems/linked-list-cycle-ii/
+ */
+func lc142_环形链表_II(head: ListNode?) -> ListNode? {
+    // 假如有环，那么相遇时，起2个指针，分别在相遇点和起点出发，指针相遇的节点就是入环节点
+    var fast = head
+    var slow = head
+    var meet: ListNode?
+    while fast != nil && slow != nil {
+        fast = fast?.next?.next
+        slow = slow?.next
+        if fast === slow && fast != nil {
+            meet = fast
+            break
+        }
+    }
+    print("meet: \(String(describing: meet?.val)))")
+    // 如果没相遇
+    if meet == nil {
+        return nil
+    }
+    // 相遇，有环
+    var p1 = head
+    var p2 = meet
+    while p1 != nil && p2 != nil {
+        if p1 === p2 {
+            return p1
+        }
+        p1 = p1?.next
+        p2 = p2?.next
+    }
+    print("异常！")
+    return nil
+}
+
 func testLinkedList() {
     let list1 = createList(array: [4,1,8,4,5])
     let list2 = createList(array: [5,0,1,8,4,5])
